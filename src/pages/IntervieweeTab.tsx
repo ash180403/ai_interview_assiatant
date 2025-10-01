@@ -1,13 +1,9 @@
-// --- IMPORTS ---
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
-// We add the `X` icon for our new cancel button.
 import { UploadCloud, Loader2, AlertCircle, UserCheck, Edit, Bot, Send, Star, X } from 'lucide-react';
 import React, { useState, useEffect, useRef } from 'react';
-
-// --- Redux Imports ---
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../app/store';
 import {
@@ -17,19 +13,15 @@ import {
 } from '../app/slices/InterviewSlice';
 import { addCandidateProfile } from '../app/slices/candidatesSlice';
 import type { CandidateProfile } from '../app/slices/candidatesSlice';
-
-// --- AI Service Imports ---
 import {
   parseResumeAndExtractInfo,
   generateInterviewQuestions,
   scoreInterviewAndWriteSummary,
 } from '../lib/gemini';
 
-// --- Animation Variants ---
 const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.2 } } };
 const itemVariants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } };
 
-// --- MAIN INTERVIEWEE TAB COMPONENT ---
 const IntervieweeTab = () => {
   const dispatch: AppDispatch = useDispatch();
   const { status, error, candidateInfo, questions, answers } = useSelector((state: RootState) => state.interview);
@@ -38,7 +30,6 @@ const IntervieweeTab = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
 
-  // useEffect for scoring and saving results
   useEffect(() => {
     if (status === 'completed') {
       const handleInterviewCompletion = async () => {
@@ -61,7 +52,6 @@ const IntervieweeTab = () => {
     }
   }, [status, dispatch, candidateInfo, questions, answers, profiles]);
 
-  // --- Event Handlers ---
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -98,7 +88,6 @@ const IntervieweeTab = () => {
     dispatch(resetInterview());
   };
 
-  // --- UI Rendering Logic ---
   const renderContent = () => {
     switch (status) {
       case 'idle':
@@ -243,7 +232,6 @@ const IntervieweeTab = () => {
   );
 };
 
-// --- SUB-COMPONENT: Interview In Progress View ---
 const InterviewInProgressView = () => {
   const dispatch: AppDispatch = useDispatch();
   const { questions, currentQuestionIndex } = useSelector((state: RootState) => state.interview);
@@ -302,7 +290,6 @@ const InterviewInProgressView = () => {
   );
 };
 
-// --- SUB-COMPONENT: Timer ---
 const Timer = ({ duration, onTimeUp }: { duration: number; onTimeUp: () => void }) => {
   const [timeLeft, setTimeLeft] = useState(duration);
 

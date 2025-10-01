@@ -1,47 +1,29 @@
-// --- IMPORTS ---
 import { motion } from 'framer-motion';
-// We now need `useState` and `useMemo` from React for interactivity.
 import { useState, useMemo } from 'react';
 import { Input } from '../components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
 import { Badge } from '../components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../components/ui/dialog";
-// We add ArrowUp and ArrowDown icons for our sorting indicators.
 import { Search, Eye, Star, Calendar, LineChart, Users, Bot, User, ArrowUp, ArrowDown } from 'lucide-react';
-
-// Redux Imports
 import { useSelector } from 'react-redux';
 import type { RootState } from '../app/store';
 import type { CandidateProfile } from '../app/slices/candidatesSlice';
 
-
-// --- Animation Variants (no change) ---
 const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } };
 const itemVariants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } };
 
-
-// --- MAIN INTERVIEWER TAB COMPONENT ---
 const InterviewerTab = () => {
   const { profiles } = useSelector((state: RootState) => state.candidates);
 
-  // --- STATE for interactivity ---
   const [selectedCandidate, setSelectedCandidate] = useState<CandidateProfile | null>(null);
-  // This state holds the text the user types into the search bar.
   const [searchTerm, setSearchTerm] = useState('');
-  // This state holds our sorting configuration. We default to sorting by score in descending order.
   const [sortConfig, setSortConfig] = useState<{ key: 'score' | 'date' | 'name'; direction: 'asc' | 'desc' }>({ key: 'score', direction: 'desc' });
 
-  // --- Memoized, Derived Data for Display ---
-  // `useMemo` is a performance hook. It re-calculates `sortedProfiles` ONLY when
-  // `profiles`, `searchTerm`, or `sortConfig` changes, not on every render.
   const sortedProfiles = useMemo(() => {
-    // 1. Filter the profiles based on the search term.
     let filtered = profiles.filter(profile =>
       profile.candidateInfo.name?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    // 2. Sort the filtered results.
-    // We create a copy with [...filtered] to avoid modifying the original array.
     return [...filtered].sort((a, b) => {
       let aValue: any;
       let bValue: any;
@@ -52,13 +34,11 @@ const InterviewerTab = () => {
       } else if (sortConfig.key === 'score') {
         aValue = a.score;
         bValue = b.score;
-      } else { // 'date'
-        // We convert date strings to Date objects for correct chronological sorting.
+      } else { 
         aValue = new Date(a.date);
         bValue = new Date(b.date);
       }
 
-      // Comparison logic for sorting
       if (aValue < bValue) {
         return sortConfig.direction === 'asc' ? -1 : 1;
       }
@@ -69,16 +49,13 @@ const InterviewerTab = () => {
     });
   }, [profiles, searchTerm, sortConfig]);
 
-  // --- Handler for changing sort column ---
   const handleSort = (key: 'score' | 'date' | 'name') => {
     setSortConfig(prevConfig => {
-      // If the user clicks the same column again, reverse the direction. Otherwise, default to descending.
       const direction = prevConfig.key === key && prevConfig.direction === 'desc' ? 'asc' : 'desc';
       return { key, direction };
     });
   };
 
-  // --- Dynamic Data Calculation ---
   const totalInterviews = profiles.length;
   const completedCount = profiles.length;
   const avgScore = completedCount > 0
@@ -86,7 +63,6 @@ const InterviewerTab = () => {
     : 0;
 
   return (
-    // We use a React Fragment <>...</> because we are returning two sibling elements.
     <>
       <motion.div
         initial={{ opacity: 0 }}
@@ -100,13 +76,11 @@ const InterviewerTab = () => {
           initial="hidden"
           animate="visible"
         >
-          {/* SECTION 1: Dashboard Header */}
           <motion.div variants={itemVariants}>
              <h2 className="text-3xl font-bold text-white mb-2">Candidate Dashboard</h2>
              <p className="text-white/60">Review and manage all candidate interviews.</p>
           </motion.div>
 
-          {/* SECTION 2: DYNAMIC Stat Cards */}
           <motion.div
               className="grid grid-cols-1 md:grid-cols-4 gap-6 items-center"
               variants={itemVariants}
@@ -118,12 +92,10 @@ const InterviewerTab = () => {
 
           </motion.div>
 
-          {/* SECTION 3: Candidates Table with Search & Sort */}
           <motion.div
             className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl"
             variants={itemVariants}
           >
-            {/* The Input is now fully controlled, linked to our `searchTerm` state. */}
             <div className="p-4 border-b border-white/10 relative">
                <Search className="absolute left-7 top-1/2 -translate-y-1/2 text-white/40" size={20} />
                <Input
@@ -134,7 +106,6 @@ const InterviewerTab = () => {
                 />
             </div>
             <Table>
-              {/* --- Table Headers are now clickable buttons for sorting --- */}
               <TableHeader>
                 <TableRow className="border-b-white/10 hover:bg-transparent">
                   <TableHead className="text-white/80">
@@ -157,7 +128,6 @@ const InterviewerTab = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {/* We now map over our new `sortedProfiles` array to display the data. */}
                 {sortedProfiles.map((profile) => (
                   <TableRow key={profile.id} className="border-b-white/10 hover:bg-white/5">
                     <TableCell className="font-medium">{profile.candidateInfo.name}</TableCell>
@@ -185,7 +155,6 @@ const InterviewerTab = () => {
         </motion.div>
       </motion.div>
 
-      {/* The Modal component is unchanged and fully functional. */}
       <CandidateDetailModal
         candidate={selectedCandidate}
         onClose={() => setSelectedCandidate(null)}
@@ -194,7 +163,6 @@ const InterviewerTab = () => {
   );
 };
 
-// --- The sub-components (Modal and StatCard) are unchanged. ---
 const CandidateDetailModal = ({ candidate, onClose }: { candidate: CandidateProfile | null; onClose: () => void }) => {
   return (
     <Dialog open={!!candidate} onOpenChange={onClose}>

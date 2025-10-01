@@ -1,8 +1,5 @@
-// --- IMPORTS ---
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-
-// --- TYPE DEFINITIONS ---
 export interface CandidateInfo {
   name: string | null;
   email: string | null;
@@ -14,13 +11,12 @@ export interface InterviewQuestion {
   difficulty: 'Easy' | 'Medium' | 'Hard';
 }
 
-// We include the new 'generating_questions' status in our type definition.
 export type InterviewStatus =
   | 'idle'
   | 'parsing_resume'
   | 'awaiting_info'
   | 'ready_to_start'
-  | 'generating_questions' // Our buffer state
+  | 'generating_questions' 
   | 'in_progress'
   | 'completed';
 
@@ -33,8 +29,6 @@ interface InterviewState {
   currentQuestionIndex: number;
 }
 
-// --- INITIAL STATE ---
-// This is the complete initial state for the slice.
 const initialState: InterviewState = {
   status: 'idle',
   candidateInfo: { name: null, email: null, phone: null },
@@ -44,11 +38,9 @@ const initialState: InterviewState = {
   currentQuestionIndex: 0,
 };
 
-// --- SLICE CREATION ---
 const interviewSlice = createSlice({
   name: 'interview',
   initialState,
-  // This contains all the reducer functions for this slice.
   reducers: {
     setParsingStatus: (state) => {
       state.status = 'parsing_resume';
@@ -78,7 +70,6 @@ const interviewSlice = createSlice({
         state.error = "Please fill in all required fields.";
       }
     },
-    // This action sets the status for our new buffer screen.
     setGeneratingStatus: (state) => {
       state.status = 'generating_questions';
     },
@@ -100,7 +91,6 @@ const interviewSlice = createSlice({
   },
 });
 
-// We export all the actions, including our new `setGeneratingStatus`.
 export const {
   setParsingStatus,
   setCandidateInfo,
