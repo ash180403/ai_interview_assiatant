@@ -6,6 +6,8 @@ import storage from 'redux-persist/lib/storage';
 
 // --- Import our new slice reducer ---
 import interviewReducer from './slices/InterviewSlice';
+import candidatesReducer from './slices/candidatesSlice'; // This is the key import.
+
 // We'll create this one in a future step.
 // import candidatesReducer from './slices/candidatesSlice';
 
@@ -16,8 +18,10 @@ const rootReducer = combineReducers({
   interview: interviewReducer,
   // We will add our slices here later
   // candidates: candidatesReducer,
+  candidates: candidatesReducer,
 });
 
+// --- PERSISTENCE CONFIGURATION ---
 const persistConfig = {
   key: 'root',
   storage,
@@ -28,6 +32,7 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
+// --- STORE CREATION (no change) ---
 export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
@@ -36,6 +41,9 @@ export const store = configureStore({
     }),
 });
 
+// --- EXPORTS ---
 export const persistor = persistStore(store);
+// This `RootState` type is now correctly inferred from our `rootReducer`.
+// It will now correctly have both `interview` and `candidates` properties, fixing the error.
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

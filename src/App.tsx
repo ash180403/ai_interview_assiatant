@@ -4,10 +4,18 @@
 // We import our essential tools for routing and animation.
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
+// We now need React hooks for state and effects to manage our modal.
+import { useState, useEffect } from 'react';
+// We need Redux hooks to check the interview status and dispatch actions.
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState, AppDispatch } from './app/store';
+// We need the `resetInterview` action for the "Restart" button.
+import { resetInterview } from './app/slices/InterviewSlice';
 
 // We import our shadcn UI components.
 import { Tabs, TabsList, TabsTrigger } from "./components/ui/tabs";
-
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "./components/ui/dialog";
+import { Button } from './components/ui/button';
 // We import our page and shared components.
 import IntervieweeTab from './pages/IntervieweeTab';
 import InterviewerTab from './pages/InterviewerTab';
@@ -15,6 +23,40 @@ import Header from './components/shared/Header';
 
 // --- MAIN APP COMPONENT ---
 function App() {
+  const dispatch: AppDispatch = useDispatch();
+  // We read the interview status directly from our Redux store. Because we updated our
+  // store.ts, this value will be loaded from localStorage on page load.
+  const interviewStatus = useSelector((state: RootState) => state.interview.status);
+
+  // --- NEW STATE for the modal ---
+  // This state controls whether the "Welcome Back" modal is visible or not.
+  const [showWelcomeBackModal, setShowWelcomeBackModal] = useState(false);
+
+  // --- NEW useEffect for checking status on load ---
+  // This hook runs only once when the App component first mounts.
+  useEffect(() => {
+    // If the persisted state shows an interview is 'in_progress' when the user loads the app...
+    if (interviewStatus === 'in_progress') {
+      console.log("Detected an interview in progress. Showing 'Welcome Back' modal.");
+      // ...we set the state to show our modal.
+      setShowWelcomeBackModal(true);
+    }
+  }, []); // The empty dependency array `[]` ensures this runs only once on mount.
+
+  // --- NEW Event Handlers for the modal ---
+  const handleResume = () => {
+    // To resume, we simply close the modal. The app will already be in the correct state
+    // because that state was loaded from localStorage.
+    setShowWelcomeBackModal(false);
+  };
+
+  const handleRestart = () => {
+    // To restart, we dispatch the `resetInterview` action to clear the old session,
+    // and then we close the modal.
+    dispatch(resetInterview());
+    setShowWelcomeBackModal(false);
+  };
+
   return (
     // The `<Router>` component is the foundation for our app's navigation.
     <Router>
@@ -42,7 +84,7 @@ function App() {
         */}
         <style>
           {`
-            @keyframes blob {
+            .keyframes blob {
               0% { transform: translate(0px, 0px) scale(1); }
               33% { transform: translate(30px, -50px) scale(1.1); }
               66% { transform: translate(-20px, 20px) scale(0.9); }
@@ -64,6 +106,26 @@ function App() {
               <AnimatedRoutes />
             </main>
         </div>
+        {/* --- NEW: The Welcome Back Modal --- */}
+        {/* We use the Dialog component from shadcn, controlled by our new state. */}
+        <Dialog open={showWelcomeBackModal}>
+          <DialogContent className="bg-black/40 backdrop-blur-xl border-white/20 text-white">
+            <DialogHeader>
+              <DialogTitle className="text-2xl">Welcome Back!</DialogTitle>
+              <DialogDescription className="text-white/60 pt-2">
+                It looks like you were in the middle of an interview. Would you like to resume where you left off?
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex justify-end gap-4 pt-4">
+              <Button variant="outline" onClick={handleRestart} className="text-white bg-transparent border-white/20 hover:bg-white/10 hover:text-white">
+                Restart
+              </Button>
+              <Button onClick={handleResume} className="bg-cyan-500 text-black hover:bg-cyan-400">
+                Resume Interview
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </Router>
   );
