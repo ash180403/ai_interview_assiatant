@@ -1,80 +1,60 @@
-AI-Powered Interview Assistant
-A sophisticated, AI-powered interview assistant designed to streamline the technical screening process for Full Stack Developer roles. This application provides a seamless experience for both the candidate and the interviewer, all within a stunning, modern user interface.
+# 🤖 AI-Powered Interview Assistant
 
-✨ Live Demo Link ✨
-Project Overview
-This project is a feature-complete, single-page application that fulfills the role of an AI-powered interview platform. It showcases a modern, fluid UI built with a "Glassmorphism" aesthetic, powered by a dynamic, animated aurora background. The application leverages the Google Gemini API for its core intelligence, handling everything from resume analysis to dynamic question generation and final performance scoring.
+A sophisticated, AI-powered interview assistant designed to streamline the technical screening process for **Full Stack Developer** roles.  
+This application provides a seamless experience for both the **candidate** and the **interviewer**, all within a modern, glassmorphic user interface.
 
-The entire experience is divided into two main views: a candidate-facing chat interface for conducting the timed interview, and a persistent, dynamic dashboard for the interviewer to review and manage all completed sessions.
+🌐 **[Live Demo](https://ai-interview-assiatant.vercel.app/)**
 
-🚀 Key Features
-This application successfully implements all the core requirements of the project brief:
+---
 
-Interviewee Experience (Chat)
-📄 AI-Powered Resume Parsing: Candidates can upload a PDF resume. The application reads the document and uses the Gemini API to automatically extract the candidate's name, email, and phone number.
+## 📌 Project Overview
 
-🤖 Intelligent Info Collection: If the AI is unable to find any of the required details, a sleek form dynamically appears, prompting the user to fill in only the missing information.
+This project is a **feature-complete single-page application** that serves as an AI-powered interview platform.  
+It features a **fluid UI with Glassmorphism design** and a **dynamic aurora background**.  
 
-⏱️ Timed, Multi-Difficulty Interview: The AI generates a unique set of 6 questions for a Full Stack role (2 Easy, 2 Medium, 2 Hard). Each question is presented one at a time with a dedicated, animated timer (20s, 60s, 120s).
+The application leverages the **Google Gemini API** for intelligence, handling everything from **resume analysis** to **dynamic question generation** and **performance scoring**.
 
-➡️ Auto-Submission: If a candidate runs out of time on a question, the system automatically submits their current answer and proceeds to the next question.
+The experience is divided into two main views:
+1. **Candidate Interface (Chat)** – Conducts the AI-driven interview.  
+2. **Interviewer Dashboard** – Displays and manages completed sessions.
 
-Interviewer Experience (Dashboard)
-📈 Dynamic Candidate Dashboard: The dashboard displays a real-time list of all candidates who have completed an interview.
+---
 
-📊 Search & Sort: The dashboard is fully interactive, allowing the interviewer to search for candidates by name and sort the list by score, name, or date.
+## 🚀 Key Features
 
-📂 Detailed Interview Review: By clicking "View," an interviewer can open a detailed modal that shows the candidate's full profile, their final score, the AI-generated performance summary, and a complete transcript of the entire interview with every question and answer.
+### 🎯 Interviewee Experience
+- **📄 Resume Parsing** – Upload a PDF resume. The app auto-extracts name, email, and phone using Gemini API.  
+- **🤖 Intelligent Info Collection** – If details are missing, a sleek form appears dynamically.  
+- **⏱️ Timed Interview** – 6 AI-generated questions (2 Easy, 2 Medium, 2 Hard) with timers:  
+  - Easy → 20s  
+  - Medium → 60s  
+  - Hard → 120s  
+- **➡️ Auto-Submission** – Answers auto-submit when time runs out.
 
-Core Architecture
-💾 Local Persistence: All completed candidate profiles are saved to the browser's local storage using redux-persist, ensuring that data is never lost, even if the browser is closed and reopened.
+### 👨‍💼 Interviewer Dashboard
+- **📈 Candidate Dashboard** – Real-time list of completed interviews.  
+- **🔍 Search & Sort** – Search by name, sort by score, name, or date.  
+- **📂 Interview Review** – View candidate details, AI summary, final score, and complete Q/A transcript.
 
-↩️ Pause and Resume: If a candidate refreshes or closes the tab mid-interview, a "Welcome Back" modal appears upon their return, giving them the option to seamlessly resume where they left off or restart the interview.
+---
 
-🛠️ Tech Stack
-Frontend: React, TypeScript, Vite
+## 🏛 Core Architecture
 
-State Management: Redux Toolkit, React-Redux, Redux Persist
+- **💾 Local Persistence** – Data saved to browser’s Local Storage via `redux-persist`.  
+- **↩️ Pause & Resume** – If a candidate leaves mid-interview, they can resume seamlessly.  
 
-Styling: Tailwind CSS
+> 🔑 In production, the system could evolve into separate Interviewer & Interviewee apps communicating through a **cloud database** (e.g., Firebase Firestore) for **scalability & team access**.
 
-UI Components: shadcn/ui
+---
 
-Animations: Framer Motion
+## 🛠️ Tech Stack
 
-AI Integration: Google Gemini API
+- **Frontend:** React, TypeScript, Vite  
+- **State Management:** Redux Toolkit, React-Redux, Redux Persist  
+- **Styling:** Tailwind CSS  
+- **UI Components:** [shadcn/ui](https://ui.shadcn.com/)  
+- **Animations:** Framer Motion  
+- **AI Integration:** Google Gemini API  
+- **PDF Parsing:** pdf.js  
 
-PDF Parsing: pdf.js
-
-🏛️ Architectural Decisions
-A key requirement of this project was to "persist all data locally." To meet this, I chose to use redux-persist to save all completed interviews directly to the browser's Local Storage.
-
-This approach perfectly fulfills the assignment's constraints. In a real-world, production environment, I would evolve this architecture by separating the Interviewee and Interviewer views into two distinct applications. They would communicate via a central cloud database (like Firebase Firestore) to ensure security, scalability, and multi-user accessibility for a hiring team.
-
-🏁 Getting Started
-To run this project on your local machine, follow these steps:
-
-1. Clone the Repository
-
-git clone <your-repository-url>
-cd <repository-folder>
-
-2. Install Dependencies
-
-npm install
-
-3. Set Up Your Environment Variables
-
-You will need an API key from the Google Gemini API.
-
-In the root of the project, create a new file named .env.local.
-
-Add your API key to this file:
-
-VITE_GEMINI_API_KEY=YOUR_API_KEY_HERE
-
-4. Run the Development Server
-
-npm run dev
-
-The application should now be running on http://localhost:5173.
+---
