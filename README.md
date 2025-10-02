@@ -52,7 +52,7 @@ The experience is divided into two main views:
 - **Frontend:** React, TypeScript, Vite  
 - **State Management:** Redux Toolkit, React-Redux, Redux Persist  
 - **Styling:** Tailwind CSS  
-- **UI Components:** [shadcn/ui](https://ui.shadcn.com/)  
+- **UI Components:** [shadcn/ui](https://ui.shadcn.com/), [framer motion](https://www.npmjs.com/package/framer-motion) 
 - **Animations:** Framer Motion  
 - **AI Integration:** Google Gemini API  
 - **PDF Parsing:** pdf.js  
